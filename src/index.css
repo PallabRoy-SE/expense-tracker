@@ -1,0 +1,58 @@
+:root {
+  --color-bg: #3b3b3b;
+  --color-bg-secondary: #626262;
+  --color-card-bg: #9b9b9b;
+  --color-violet: #a000ff;
+  --color-violet-smoke: #8784d2;
+  --color-green: #43967b;
+  --color-white: #ffffff;
+  --color-smoke-grey: #f1f1f1;
+  --color-black: #000000;
+  --color-orange: #ff9304;
+  --color-yellow: #fde006;
+  --color-button-bg: #f4bb4a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+#root,
+#__next {
+  isolation: isolate;
+}
