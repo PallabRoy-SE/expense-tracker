@@ -1,0 +1,52 @@
+.main-container {
+  padding: 1rem;
+}
+
+.statistics-container {
+  display: grid;
+  grid-template-columns: 75% 20%;
+  gap: 5%;
+  height: calc(100vh - 65vh);
+}
+
+.balance-card-container {
+  display: grid;
+  grid-template-columns: 45% 45%;
+  gap: 5%;
+  padding: 2.5% 3.5%;
+}
+.bottom-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  height: calc(100vh - 62vh);
+  gap: 2.5%;
+  margin-top: 2rem;
+}
+.txn-container {
+  width: 60vw;
+  height: 100%;
+}
+
+.txn-container .txn-body {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.txn-container .txn-footer {
+  height: 20%;
+}
+
+.progress-container {
+  width: 40vw;
+  height: 100%;
+}
+.expense-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem 0.5rem;
+  height: 100%;
+}
