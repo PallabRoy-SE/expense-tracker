@@ -1,4 +1,5 @@
 :root {
+  /* colors */
   --color-bg: #3b3b3b;
   --color-bg-secondary: #626262;
   --color-card-bg: #9b9b9b;
@@ -11,6 +12,14 @@
   --color-orange: #ff9304;
   --color-yellow: #fde006;
   --color-button-bg: #f4bb4a;
+  --color-icon-bg: #d9d9d9;
+  --color-text-grey: #9b9b9b;
+  /* ---------------------- */
+
+  /* fonts */
+  --font-ubuntu: Ubuntu, sans-serif;
+  --font-open-sans: Open Sans, sans-serif;
+  /* ---------------------- */
 }
 
 *,
@@ -20,6 +29,7 @@
 }
 * {
   margin: 0;
+  font-family: var(--font-ubuntu);
 }
 html,
 body {
@@ -28,6 +38,8 @@ body {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  background-color: var(--color-bg);
+  color: var(--color-white);
 }
 img,
 picture,
