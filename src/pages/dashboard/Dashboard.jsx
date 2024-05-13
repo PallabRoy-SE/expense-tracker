@@ -12,7 +12,7 @@ import {
 import ExtChart from "../../components/chart/EtxChart";
 import ExtModal from "../../components/modals/modal/ExtModal";
 import ExtModalBalance from "../../components/modals/balance/ExtModalBalance";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ExtModalExpense from "../../components/modals/expense/ExtModalExpense";
 import { useSnackbar } from "notistack";
 import GlobalContext from "../../contexts/GlobalContext";
@@ -37,15 +37,33 @@ const paginationBtnStyle = {
 
 function Dashboard() {
   const globalContext = useContext(GlobalContext);
+  const { enqueueSnackbar } = useSnackbar();
   const [isBalanceModalOpened, setBalanceModalOpenState] = useState(false);
   const [isExpenseModalOpened, setExpenseModalOpenState] = useState(false);
+  const [expenses, setExpenses] = useState([]);
   const [editExpense, setEditExpense] = useState(null);
-  const { enqueueSnackbar } = useSnackbar();
+  const [paginationData, setPaginationData] = useState({
+    current: 0,
+    expensePerPage: 3,
+  });
+
+  const generateCurrentPageExpenses = () => {
+    setExpenses(() => [
+      ...[...globalContext.expenses].splice(
+        paginationData.current * paginationData.expensePerPage,
+        paginationData.expensePerPage
+      ),
+    ]);
+  };
+
+  const handleNavigation = (moveTo) => {
+    setPaginationData((prev) => ({ ...prev, current: prev.current + moveTo }));
+  };
 
   const extractExpenseCategory = (id) => {
     return globalContext.categoryData.find((cat) => cat.id === parseInt(id));
   };
-  const handleTxnAction = (expense, type) => {
+  const handleExpAction = (expense, type) => {
     switch (type) {
       case "EDIT":
         setEditExpense(expense);
@@ -67,6 +85,10 @@ function Dashboard() {
         break;
     }
   };
+
+  useEffect(() => {
+    generateCurrentPageExpenses();
+  }, [paginationData, globalContext.expenses]);
 
   return (
     <section className="main-container">
@@ -101,7 +123,7 @@ function Dashboard() {
           <ExtTitle title="Recent Transactions" style={secondaryTitleStyle} />
           <ExtCard style={{ padding: "1rem", paddingBottom: 0 }}>
             <section className="txn-body">
-              {globalContext.expenses.map((expense) => (
+              {expenses.map((expense) => (
                 <EtxTransaction
                   key={expense.id}
                   CatLogo={extractExpenseCategory(expense.categoryId).logo}
@@ -109,17 +131,32 @@ function Dashboard() {
                   date={new Date(expense.date)}
                   amount={expense.amount}
                   handleAction={(type) => {
-                    handleTxnAction(expense, type);
+                    handleExpAction(expense, type);
                   }}
                 />
               ))}
             </section>
             <footer className="txn-footer">
-              <ExtButton style={paginationBtnStyle}>
+              <ExtButton
+                disabled={paginationData.current === 0}
+                style={paginationBtnStyle}
+                onClick={() => handleNavigation(-1)}
+              >
                 <LiaLongArrowAltLeftSolid />
               </ExtButton>
-              <span className="page-count">1</span>
-              <ExtButton style={paginationBtnStyle}>
+              <span className="page-count">{paginationData.current + 1}</span>
+              <ExtButton
+                disabled={
+                  paginationData.current ===
+                  Math.ceil(
+                    globalContext.expenses.length /
+                      paginationData.expensePerPage
+                  ) -
+                    1
+                }
+                style={paginationBtnStyle}
+                onClick={() => handleNavigation(1)}
+              >
                 <LiaLongArrowAltRightSolid />
               </ExtButton>
             </footer>
