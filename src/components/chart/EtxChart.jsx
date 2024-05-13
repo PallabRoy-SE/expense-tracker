@@ -1,12 +1,6 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
-const data = [
-  { name: "Food", value: 300, color: "var(--color-violet)" },
-  { name: "Entertainment", value: 700, color: "var(--color-orange)" },
-  { name: "Travel", value: 100, color: "var(--color-yellow)" },
-];
-
 const RADIAN = Math.PI / 180;
 const generateLabel = ({
   cx,
@@ -33,12 +27,12 @@ const generateLabel = ({
   );
 };
 
-function EtxChart() {
+function EtxChart({ ratio }) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart width={400} height={400}>
         <Pie
-          data={data}
+          data={ratio}
           cx="50%"
           cy="50%"
           labelLine={false}
@@ -46,7 +40,7 @@ function EtxChart() {
           outerRadius={80}
           dataKey="value"
         >
-          {data.map((entry, index) => (
+          {ratio.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>

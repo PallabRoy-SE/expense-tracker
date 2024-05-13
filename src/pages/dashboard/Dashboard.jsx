@@ -42,6 +42,7 @@ function Dashboard() {
   const [isExpenseModalOpened, setExpenseModalOpenState] = useState(false);
   const [expenses, setExpenses] = useState([]);
   const [editExpense, setEditExpense] = useState(null);
+
   const [paginationData, setPaginationData] = useState({
     current: 0,
     expensePerPage: 3,
@@ -49,10 +50,12 @@ function Dashboard() {
 
   const generateCurrentPageExpenses = () => {
     setExpenses(() => [
-      ...[...globalContext.expenses].splice(
-        paginationData.current * paginationData.expensePerPage,
-        paginationData.expensePerPage
-      ),
+      ...[...globalContext.expenses]
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .splice(
+          paginationData.current * paginationData.expensePerPage,
+          paginationData.expensePerPage
+        ),
     ]);
   };
 
@@ -114,7 +117,7 @@ function Dashboard() {
             />
           </section>
           <section className="chart-container">
-            <ExtChart />
+            <ExtChart ratio={Object.values(globalContext.expenseRatio)} />
           </section>
         </section>
       </ExtCard>
@@ -166,9 +169,18 @@ function Dashboard() {
           <ExtTitle title="Top Expenses" style={secondaryTitleStyle} />
           <ExtCard>
             <section className="expense-container">
-              <EtxProgress title="Entertainment" progress={90} />
-              <EtxProgress title="Food" progress={70} />
-              <EtxProgress title="Travel" progress={30} />
+              <EtxProgress
+                title="Entertainment"
+                progress={globalContext.expenseRatio.entertainment.value}
+              />
+              <EtxProgress
+                title="Food"
+                progress={globalContext.expenseRatio.food.value}
+              />
+              <EtxProgress
+                title="Travel"
+                progress={globalContext.expenseRatio.travel.value}
+              />
             </section>
           </ExtCard>
         </section>

@@ -26,6 +26,33 @@ export default function useGlobalValueService() {
     localStorage.setItem("exp", JSON.stringify(expData));
   };
 
+  const [expenseRatio, setExpenseRatio] = useState({
+    food: { name: "Food", value: 30, color: "var(--color-violet)" },
+    entertainment: {
+      name: "Entertainment",
+      value: 70,
+      color: "var(--color-orange)",
+    },
+    travel: { name: "Travel", value: 10, color: "var(--color-yellow)" },
+  });
+
+  const updateExpenseRatio = () => {
+    const total = getTotalExpense();
+    const food = getTotalExpense(2);
+    const entertainment = getTotalExpense(1);
+    const travel = getTotalExpense(3);
+
+    const ratioObj = {
+      food: { ...expenseRatio.food, value: (food / total) * 100 },
+      entertainment: {
+        ...expenseRatio.entertainment,
+        value: (entertainment / total) * 100,
+      },
+      travel: { ...expenseRatio.travel, value: (travel / total) * 100 },
+    };
+    setExpenseRatio(ratioObj);
+  };
+
   const updateWallet = (amount) => {
     const updatedBalance = parseInt(balance) * 1 + 1 * amount;
     setBalance(updatedBalance);
@@ -33,6 +60,9 @@ export default function useGlobalValueService() {
   };
 
   const addExpense = (title, categoryId, amount, date) => {
+    if (amount > balance) {
+      throw new Error(`You don't have ₹${amount}, to spend`);
+    }
     const expenseObj = {
       id: expenses.length ? expenses[expenses.length - 1].id + 1 : 1,
       title,
@@ -50,6 +80,11 @@ export default function useGlobalValueService() {
     const index = expenses.findIndex((exp) => exp.id === updateExp.id);
     if (index !== -1) {
       const prevAmount = expenses[index].amount;
+      const currAmount = updateExp.amount;
+      const amountToUpdate = prevAmount * 1 - currAmount * 1;
+      if (amountToUpdate < 0 && amountToUpdate * -1 > balance) {
+        throw new Error(`You don't have enough balance, to spend`);
+      }
       const temp = [...expenses];
       temp[index] = {
         ...temp[index],
@@ -57,9 +92,8 @@ export default function useGlobalValueService() {
       };
       setExpenses(() => [...temp]);
       setLocalExpenses(temp);
-      const currAmount = updateExp.amount;
 
-      updateWallet(prevAmount * 1 - currAmount * 1);
+      updateWallet(amountToUpdate);
     } else {
       throw new Error(`Transaction with id: ${updateExp.id} not found`);
     }
@@ -81,10 +115,19 @@ export default function useGlobalValueService() {
     }
   };
 
+  const getTotalExpense = (catId) => {
+    if (!catId) {
+      return expenses.reduce((prev, exp) => prev * 1 + exp.amount * 1, 0);
+    } else {
+      return expenses
+        .filter((expense) => expense.categoryId * 1 === catId * 1)
+        .reduce((prev, exp) => prev * 1 + exp.amount * 1, 0);
+    }
+  };
+
   useEffect(() => {
-    setTotalExpense(
-      expenses.reduce((prev, exp) => prev * 1 + exp.amount * 1, 0)
-    );
+    setTotalExpense(getTotalExpense());
+    updateExpenseRatio();
   }, [expenses]);
 
   return {
@@ -92,6 +135,7 @@ export default function useGlobalValueService() {
     balance,
     updateWallet,
     expenses,
+    expenseRatio,
     addExpense,
     updateExpense,
     deleteExpense,
