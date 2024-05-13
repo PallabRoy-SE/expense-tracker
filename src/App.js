@@ -13,6 +13,10 @@ import {
   LiaLongArrowAltRightSolid,
 } from "react-icons/lia";
 import ExtChart from "./components/chart/EtxChart";
+import ExtModal from "./components/modals/modal/ExtModal";
+import ExtModalBalance from "./components/modals/balance/ExtModalBalance";
+import { useState } from "react";
+import ExtModalExpense from "./components/modals/expense/ExtModalExpense";
 
 const secondaryTitleStyle = {
   fontStyle: "italic",
@@ -32,6 +36,24 @@ const paginationBtnStyle = {
   color: "var(--color-black-alt)",
 };
 function App() {
+  const [isBalanceModalOpened, setBalanceModalOpenState] = useState(false);
+  const [isExpenseModalOpened, setExpenseModalOpenState] = useState(false);
+  const [isEditExpenseModalOpened, setEditExpenseModalOpenState] =
+    useState(false);
+
+  const handleTxnAction = (transaction, type) => {
+    switch (type) {
+      case "EDIT":
+        setEditExpenseModalOpenState(true);
+        break;
+      case "DELETE":
+        console.log("delete", transaction);
+        break;
+
+      default:
+        break;
+    }
+  };
   return (
     <section className="main-container">
       <ExtTitle title="Expense Tracker" />
@@ -44,7 +66,7 @@ function App() {
               amountColor="var(--color-bright-green)"
               btnBg="linear-gradient(90deg, var(--color-yellow-green) 0%, var(--color-bright-green) 100%)"
               btnTitle="+ Add Income"
-              btnClick={() => console.log("add")}
+              btnClick={() => setBalanceModalOpenState(true)}
             />
             <ExtBalanceCard
               title="Expenses"
@@ -52,7 +74,7 @@ function App() {
               amountColor="var(--color-button-bg)"
               btnBg="linear-gradient(90deg, var(--color-light-red) 0%, var(--color-bright-red) 80%, var(--color-red) 100%)"
               btnTitle="+ Add Expense"
-              btnClick={() => console.log("add expense")}
+              btnClick={() => setExpenseModalOpenState(true)}
             />
           </section>
           <section className="chart-container">
@@ -70,18 +92,21 @@ function App() {
                 title="Samosa"
                 date={new Date()}
                 amount={500}
+                handleAction={handleTxnAction}
               />
               <EtxTransaction
                 CatLogo={IoGiftOutline}
                 title="Samosa"
                 date={new Date()}
                 amount={500}
+                handleAction={handleTxnAction}
               />
               <EtxTransaction
                 CatLogo={BsSuitcase2}
                 title="Samosa"
                 date={new Date()}
                 amount={500}
+                handleAction={handleTxnAction}
               />
             </section>
             <footer className="txn-footer">
@@ -106,6 +131,22 @@ function App() {
           </ExtCard>
         </section>
       </section>
+      <ExtModal id="BalanceModal" isOpen={isBalanceModalOpened}>
+        <ExtModalBalance handleClose={() => setBalanceModalOpenState(false)} />
+      </ExtModal>
+      <ExtModal
+        id="ExpenseModal"
+        isOpen={isExpenseModalOpened || isEditExpenseModalOpened}
+      >
+        <ExtModalExpense
+          handleClose={() =>
+            (isEditExpenseModalOpened
+              ? setEditExpenseModalOpenState
+              : setExpenseModalOpenState)(false)
+          }
+          asEdit={isEditExpenseModalOpened}
+        />
+      </ExtModal>
     </section>
   );
 }
