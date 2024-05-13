@@ -83,3 +83,18 @@ h6 {
 button {
   cursor: pointer;
 }
+.recharts-default-legend {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.recharts-legend-item-text {
+  color: var(--color-white) !important;
+  font-family: var(--font-open-sans);
+  font-weight: 400;
+  font-size: 0.75rem;
+}
+html {
+  font-size: 1.045vw;
+}

@@ -3,6 +3,7 @@
   align-items: center;
   flex-direction: row;
   gap: 2.5%;
+  margin-bottom: 1rem;
 }
 .expense .label {
   text-align: right;

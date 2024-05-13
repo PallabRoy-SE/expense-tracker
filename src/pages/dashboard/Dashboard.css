@@ -70,3 +70,36 @@
   margin-inline: 0.5rem;
   box-shadow: 0px 4px 4px 0px #00000040;
 }
+
+@media screen and (max-width: 775px) {
+  html {
+    font-size: 10px;
+  }
+  .statistics-container {
+    grid-template-columns: auto;
+    height: calc(100vh - 30vh);
+  }
+
+  .balance-card-container {
+    grid-template-columns: auto;
+    gap: 5%;
+    padding: 2.5% 3.5%;
+  }
+
+  .bottom-container {
+    flex-direction: column;
+    height: auto;
+  }
+  .txn-container {
+    width: 100%;
+  }
+  .progress-container {
+    width: 100%;
+  }
+  .txn-footer {
+    padding-bottom: 1rem;
+  }
+  .balance-card-container {
+    padding-inline: 10%;
+  }
+}
