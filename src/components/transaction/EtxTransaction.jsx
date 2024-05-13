@@ -40,7 +40,7 @@ function EtxTransaction({ title, date, amount, CatLogo, handleAction }) {
             backgroundColor: "var(--color-red-icon-bg)",
             marginRight: "0.5rem",
           }}
-          onClick={() => handleAction({}, "DELETE")}
+          onClick={() => handleAction("DELETE")}
         >
           <div className={styles["action-btn"]}>
             <AiOutlineCloseCircle />
@@ -48,7 +48,7 @@ function EtxTransaction({ title, date, amount, CatLogo, handleAction }) {
         </ExtButton>
         <ExtButton
           style={actionButtonStyle}
-          onClick={() => handleAction({}, "EDIT")}
+          onClick={() => handleAction("EDIT")}
         >
           <div className={styles["action-btn"]}>
             <BiPencil />

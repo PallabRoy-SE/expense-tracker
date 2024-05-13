@@ -6,17 +6,20 @@ import EtxInput from "../../input/EtxInput";
 import ExtButton from "../../button/ExtButton";
 import ExtSelect from "../../select/ExtSelect";
 import GlobalContext from "../../../contexts/GlobalContext";
-import useTransactionService from "../../../services/transactionService";
+import { useSnackbar } from "notistack";
 
 function ExtModalExpense({ handleClose, asEdit }) {
-  const txnService = useTransactionService();
+  const globalContext = useContext(GlobalContext);
+  const { enqueueSnackbar } = useSnackbar();
   const { categoryData } = useContext(GlobalContext);
-  const [formData, setFormData] = useState({
-    title: "",
-    amount: "",
-    categoryId: -1,
-    date: "",
-  });
+  const [formData, setFormData] = useState(
+    asEdit ?? {
+      title: "",
+      amount: "",
+      categoryId: -1,
+      date: "",
+    }
+  );
 
   const clearForm = () => {
     setFormData({
@@ -30,17 +33,23 @@ function ExtModalExpense({ handleClose, asEdit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
-      txnService.addTransaction(
-        formData.title,
-        formData.categoryId,
-        formData.amount,
-        formData.date
-      );
-      alert("Transaction added");
+      asEdit
+        ? globalContext.updateExpense({ ...asEdit, ...formData })
+        : globalContext.addExpense(
+            formData.title,
+            formData.categoryId,
+            formData.amount,
+            formData.date
+          );
+      enqueueSnackbar(`Expense ${asEdit ? "Updated" : "Added"}`, {
+        variant: "success",
+      });
       handleClose();
       clearForm();
     } catch (error) {
-      console.log(error);
+      enqueueSnackbar(error, {
+        variant: "error",
+      });
     }
   };
   return (

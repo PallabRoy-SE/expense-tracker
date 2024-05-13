@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import styles from "./ExtModalBalance.module.css";
 import ExtCard from "../../card/ExtCard";
 import ExtTitle from "../../title/ExtTitle";
 import EtxInput from "../../input/EtxInput";
 import ExtButton from "../../button/ExtButton";
+import { useSnackbar } from "notistack";
+import GlobalContext from "../../../contexts/GlobalContext";
 
 function ExtModalBalance({ handleClose }) {
+  const [balance, setBalance] = useState("");
+  const globalContext = useContext(GlobalContext);
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    try {
+      globalContext.updateWallet(balance);
+      enqueueSnackbar(`Balance added`, {
+        variant: "success",
+      });
+      handleClose();
+      setBalance("");
+    } catch (error) {
+      enqueueSnackbar(error, {
+        variant: "error",
+      });
+    }
   };
   return (
     <ExtCard style={{ overflow: "hidden" }}>
@@ -26,6 +44,8 @@ function ExtModalBalance({ handleClose }) {
             placeholder="Income Amount"
             min={0}
             required
+            value={balance}
+            onChange={(e) => setBalance(e.target.value)}
           />
           <ExtButton
             type="submit"
