@@ -1,6 +1,5 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
-import styles from "./EtxChart.module.css";
 
 const data = [
   { name: "Food", value: 300, color: "var(--color-violet)" },

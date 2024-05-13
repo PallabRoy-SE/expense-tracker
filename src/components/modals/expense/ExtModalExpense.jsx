@@ -1,14 +1,47 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import ExtCard from "../../card/ExtCard";
 import ExtTitle from "../../title/ExtTitle";
 import styles from "./ExtModalExpense.module.css";
 import EtxInput from "../../input/EtxInput";
 import ExtButton from "../../button/ExtButton";
 import ExtSelect from "../../select/ExtSelect";
+import GlobalContext from "../../../contexts/GlobalContext";
+import useTransactionService from "../../../services/transactionService";
 
 function ExtModalExpense({ handleClose, asEdit }) {
+  const txnService = useTransactionService();
+  const { categoryData } = useContext(GlobalContext);
+  const [formData, setFormData] = useState({
+    title: "",
+    amount: "",
+    categoryId: -1,
+    date: "",
+  });
+
+  const clearForm = () => {
+    setFormData({
+      title: "",
+      amount: 0,
+      categoryId: -1,
+      date: "",
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    try {
+      txnService.addTransaction(
+        formData.title,
+        formData.categoryId,
+        formData.amount,
+        formData.date
+      );
+      alert("Transaction added");
+      handleClose();
+      clearForm();
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <ExtCard style={{ overflow: "hidden" }}>
@@ -27,6 +60,10 @@ function ExtModalExpense({ handleClose, asEdit }) {
             type="text"
             placeholder="Title"
             required
+            value={formData.title}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, title: e.target.value }))
+            }
           />
           <EtxInput
             style={{ marginBottom: "1.3rem" }}
@@ -34,25 +71,38 @@ function ExtModalExpense({ handleClose, asEdit }) {
             placeholder="Price"
             min={0}
             required
+            value={formData.amount}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, amount: e.target.value }))
+            }
           />
           <ExtSelect
             style={{ marginBottom: "1.3rem" }}
             placeholder="Select Category"
             required
-            defaultValue=""
+            value={formData.categoryId}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, categoryId: e.target.value }))
+            }
           >
-            <option value="" disabled>
+            <option value={-1} disabled>
               Select Category
             </option>
-            <option value="entertainment">Entertainment</option>
-            <option value="food">Food</option>
-            <option value="travel">Travel</option>
+            {categoryData.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.label}
+              </option>
+            ))}
           </ExtSelect>
           <EtxInput
             style={{ marginBottom: "1.3rem" }}
             type="date"
             min={0}
             required
+            value={formData.date}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, date: e.target.value }))
+            }
           />
           <ExtButton
             type="submit"
