@@ -19,6 +19,10 @@ A web application for tracking expenses, allowing users to add, edit, and delete
 
 In the project directory, you can run:
 
+### `npm install`
+
+Install necessary dependencies.
+
 ### `npm start`
 
 Runs the app in the development mode.\
